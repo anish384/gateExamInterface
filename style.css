@@ -1,0 +1,423 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden; 
+    display: flex; 
+    flex-direction: column; 
+    background-color: #f1f1f1;
+}
+
+/* 1. Header & Branding */
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    padding: 3px 10px;
+    background-color: #fff;
+    flex-shrink: 0;
+}
+
+.iit-org-logo { width: 8%; }
+.iit-org-logo img { width: 50px; height: auto; }
+.iit-goal { width: 8%; text-align: right; }
+.iit-goal img { width: 50px; height: auto; }
+
+.iit-org-name { text-align: center; }
+.iit-org-name h1 { font-size: 18px; margin: 0 0 2px 0; color: #800000; /* Accurate Purple tint from GATE */ }
+.iit-org-name p { color: #1875b3; margin: 0; font-size: 12px; font-weight: bold;}
+
+/* 2. Sprites & Icons */
+.info-icon-sprite, .question-icon-sprite {
+    width: 30px; height: 30px;
+    background-image: url('./images/instruction_image.png');
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+.info-icon-sprite { background-position: -133px -1px; }
+.question-icon-sprite { width: 28px; background-position: -184px -1px; }
+
+/* Tooltip Customization for Calculator */
+.calc-tooltip-trigger { position: relative; }
+.calc-tooltip-trigger:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: -22px; 
+    left: 50%;
+    transform: translateX(-50%);
+    background: #000;
+    color: #fff;
+    padding: 3px 6px;
+    font-size: 11px;
+    border-radius: 2px;
+    white-space: nowrap;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+/* Dropdown Menu styling for the (i) Info Icons */
+.info-icon-wrapper { position: relative; display: inline-block; cursor: pointer; }
+.info-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #e5f1f8;
+    border: 1px solid #46b8da;
+    z-index: 1000;
+    width: 260px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    padding: 10px;
+    border-radius: 4px;
+    color: #333;
+}
+.info-icon-wrapper:hover .info-dropdown { display: block; }
+.info-title { font-weight: bold; background: #1875b3; color: white; padding: 5px; margin: -10px -10px 10px -10px; font-size: 13px; }
+.info-row { display: flex; align-items: center; gap: 8px; font-size: 11px; margin-bottom: 5px; }
+
+
+/* 3. Status Bars */
+.ins-ques {
+    height: 25px; 
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    background-color: #363636;
+    flex-shrink: 0;
+}
+.ins-ques p { color: #e9d944; font-size: 13px; margin: 0; font-weight: bold; }
+.ins-ques-btn { display: flex; gap: 10px; }
+.ins-ques-btn a { display: flex; text-decoration: none; align-items: center; color: white; font-size: 12px;}
+.ins-ques-btn .info-icon-sprite, .ins-ques-btn .question-icon-sprite { transform: scale(0.65); margin-right: -5px; }
+
+/* --- MAIN WORKSPACE LAYOUT --- */
+.workspace {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; 
+    min-height: 0; 
+}
+
+/* 4. Top Action Row (Calculator, Sections, Profile) */
+.workspace-top {
+    display: flex;
+    flex-shrink: 0; 
+    background-color: #fff;
+}
+
+.top-left {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    border-right: 1px solid #ccc;
+}
+
+.top-right {
+    width: 280px;
+    flex-shrink: 0;
+    border-left: 2px solid #ccc;
+    border-right: 2px solid #ccc;
+}
+
+.calc-section {
+    display: flex;
+    align-items: center;
+    background-color: #f2f2f2;
+    padding: 4px 10px; 
+    border-bottom: 1px solid #dcdcdc;
+    justify-content: space-between;
+}
+.exam-name-con, .calc-icon-con { display: flex; gap: 8px; align-items: center; }
+
+.left-arrow-sprite { width: 0; height: 0; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-right: 8px solid #c0c0c0; cursor: pointer; }
+.right-arrow-sprite { width: 0; height: 0; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-left: 8px solid #c0c0c0; cursor: pointer; }
+.left-arrow-sprite:hover { border-right-color: #888; }
+.right-arrow-sprite:hover { border-left-color: #888; }
+
+.exam-name {
+    display: flex;
+    align-items: center;
+    background-color: #1875b3; 
+    height: 22px; 
+    color: white;
+    padding: 0 8px;
+    border-radius: 2px;
+    position: relative; 
+    gap: 4px;
+}
+.exam-name::after {
+    content: ""; position: absolute; bottom: -4px; left: 103px; 
+    border-width: 6px 6px 0; border-style: solid; border-color: #1875b3 transparent transparent transparent;
+}
+.exam-name p { margin: 0; font-size: 11px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; }
+.exam-name .info-icon-sprite { transform: scale(0.6); margin-right: -8px;}
+
+.calc-icon { width: 30px; height: 30px; background-image: url('./images/instruction_image.png'); background-repeat: no-repeat; background-position: -140px -57px; cursor: pointer; }
+
+.time-left-sec { display: flex; justify-content: space-between; padding: 4px 10px; border-bottom: 1px solid #ccc; }
+.time-left-sec p { color: #333; font-size: 13px; margin: 0; font-weight: bold; }
+
+/* 5. Section Tabs */
+.section-tabs-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    border-bottom: 1px solid #ccc;
+    background-color: white;
+    height: 28px;  
+    flex-shrink: 0;
+}
+.tabs-left { display: flex; align-items: stretch; }
+.nav-arrow { display: flex; align-items: center; padding: 0 10px; color: #999; font-weight: bold; font-size: 14px; cursor: pointer; }
+.nav-arrow:hover { color: #333; }
+.section-tab {
+    display: flex;
+    align-items: center;
+    padding: 0 4px 0 10px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    border-right: 1px solid #ccc;
+}
+.section-tab.active { background-color: #1875b3; color: white; border-color: #1875b3; }
+.section-tab:not(.active) { background-color: white; color: #1875b3; }
+.tab-icon { transform: scale(0.55); margin-right: -6px; }
+
+/* Profile Layout */
+.prof-can-name-con {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 6px 10px;
+    border-bottom: 1px solid #ccc;
+    height: 100%;
+    box-sizing: border-box;
+}
+.profile-pic img { border: 1px solid #999; border-radius: 4px; display: block; }
+.candidate-name { font-size: 15px; font-weight: bold; color: #000; }
+
+
+/* 6. BOTTOM WORKSPACE (Question + Palette) */
+.workspace-bottom {
+    display: flex;
+    flex-grow: 1;
+    min-height: 0; 
+}
+
+.ques-section {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #ccc;
+    min-width: 0;
+    background: #fff;
+}
+
+.right-panel {
+    width: 280px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    border-left: 2px solid #ccc;
+    border-right: 2px solid #ccc;
+    background-color: #fff;
+}
+
+/* --- THE QUESTION AREA --- */
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 10px; 
+    border-bottom: 1px solid #ccc;
+    font-size: 13px;
+    flex-shrink: 0; 
+}
+.q-marks .pos-marks { color: green; font-weight: bold; }
+.q-marks .neg-marks { color: red; font-weight: bold; }
+
+.question-area-wrapper {
+    position: relative;
+    flex-grow: 1;
+    min-height: 0;
+    display: flex;
+    padding: 6px; 
+    background-color: #fcfcfc;
+}
+
+/* 7. Dedicated Question Box */
+.question-content-box {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    position: relative;
+    margin-right: 15px; /* Room for toggle arrow */
+}
+
+/* The Grey Title Bar inside the box */
+.question-number-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    padding: 6px 10px;
+    font-size: 14px;
+    background-color: #fff;
+}
+
+/* Custom Scroll Arrows */
+.scroll-btn { width: 20px; height: 20px; cursor: pointer; display: none; }
+.scroll-down-btn { margin-right: 0px; } 
+.scroll-up-btn { 
+    position: absolute; 
+    bottom: 5px; 
+    right: 18px; /* Accounts for scrollbar width */
+    z-index: 10; 
+}
+
+/* Scrollable Container */
+.question-scroll-body {
+    flex-grow: 1;
+    overflow-y: auto; 
+    padding: 15px 15px 30px 15px; /* Extra bottom padding for scroll-up arrow */
+}
+
+/* CUSTOM SCROLLBAR (Matches GATE Interface) */
+.question-scroll-body::-webkit-scrollbar {
+    width: 10px;
+}
+.question-scroll-body::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-left: 1px solid #ddd;
+}
+.question-scroll-body::-webkit-scrollbar-thumb {
+    background: #c1c1c1; 
+    border-radius: 5px;
+}
+.question-scroll-body::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8; 
+}
+
+.question-text { font-size: 18px; line-height: 1.5; color: #000; }
+.question-text > :last-child { margin-bottom: 0; } /* Prevents false overflows */
+
+/* Options Styling */
+.options { margin-top: 15px; display: flex; flex-direction: column; gap: 15px; }
+.options label { cursor: pointer; display: flex; align-items: flex-start; gap: 8px;}
+.options input { margin-top: 3px; }
+
+/* Black Sidebar Toggle Arrow */
+.sidebar-toggle {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 15px;
+    height: 40px;
+    background-color: #333;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 20;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+}
+.sidebar-toggle:hover { background-color: #555; }
+
+/* 8. Fixed Action Footer */
+.question-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 10px;
+    border-top: 1px solid #ccc;
+    background-color: #f9f9f9;
+    flex-shrink: 0; 
+}
+.footer-btn { font-weight: 600; padding: 15px 22px; border: 1px solid #ccc; background-color: white; cursor: pointer; border-radius: 3px; font-size: 13px; color: #333;}
+.footer-btn:hover { background-color: #147eb3;  }
+.footer-btn:hover { color: white; font-weight: 600;}
+.btn-primary { background-color: #1875b3; color: white; border-color: #1875b3; font-weight: bold;}
+.btn-primary:hover { background-color: #125b8e; color: white; }
+.footer-right { display: flex; gap: 10px; }
+
+.version-bar { background-color: #6c7a89; color: white; text-align: center; padding: 2px; font-size: 11px; flex-shrink: 0; }
+
+/* --- RIGHT PALETTE AREA --- */
+.status-legend { padding: 8px; border-bottom: 1px solid #ccc; font-size: 11px; flex-shrink: 0; background-color: #fff;}
+.legend-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.legend-item { display: flex; align-items: center; width: 48%; gap: 5px; }
+.legend-item.full-width { width: 100%; }
+.legend-item span { line-height: 1.1; color: #333; }
+
+.palette-header { background-color: #1875b3; color: white; font-weight: bold; padding: 6px 10px; font-size: 13px; flex-shrink: 0; }
+.palette-container { 
+    background-color: #e5f1f8; 
+    padding: 10px; 
+    flex-grow: 1; 
+    min-height: 0; 
+    overflow-y: auto; 
+}
+.choose-q-text { font-weight: bold; margin-top: 0; margin-bottom: 10px; font-size: 13px; }
+.question-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+
+.submit-container { background-color: #e5f1f8; padding: 10px; text-align: center; border-top: 1px solid #ccc; flex-shrink: 0; }
+.submit-btn { background-color: #5bc0de; color: white; border: 1px solid #46b8da; padding: 8px 25px; border-radius: 4px; cursor: pointer; font-size: 14px; }
+.submit-btn:hover { background-color: #31b0d5; }
+
+/* 9. Grid Sprites Base */
+.sprite-shape, .grid-btn {
+    background-image: url('./images/questions-sprite.png');
+    background-repeat: no-repeat;
+    display: flex; justify-content: center; align-items: center;
+    color: white; font-size: 14px; cursor: pointer;
+}
+.grid-btn { padding-bottom: 3px; }
+.sprite-shape.status-not-visited, .grid-btn.status-not-visited { color: #000; }
+
+.status-answered { background-position: -4px -5px; width: 50px; height: 42px; }
+.status-not-answered { background-position: -57px -6px; width: 49px; height: 41px; }
+.status-not-visited { background-position: -159px -4px; width: 44px; height: 43px; }
+.status-review { background-position: -108px -1px; width: 61px; height: 49px; }
+.status-answered-review { background-position: -499px -108px; width: 49px; height: 40px; }
+
+.status-answered-small { background-position: -7px -55px; width: 29px; height: 26px; }
+.status-not-answered-small { background-position: -42px -56px; width: 29px; height: 26px; }
+.status-not-visited-small { background-position: -108px -56px; width: 27px; height: 26px; }
+.status-review-small { background-position: -75px -54px; width: 28px; height: 28px; }
+.status-answered-review-small { background-position: -10px -87px; width: 35px; height: 35px; }
+
+.status-answered::hover{
+    background-position: -4px -126px;
+	width: 50px;
+	height: 42px;
+}
+
+.status-not-answered::hover{
+    background-position: -57px -127px;
+	width: 49px;
+	height: 41px;
+}
+
+.status-answered-review::hover{
+    background-position: -65px -179px;
+	width: 49px;
+	height: 48px;
+}
+
+.status-review::hover {
+    background-position: -108px -122px;
+	width: 49px;
+	height: 49px;
+}
+.sprite-shape.status-not-visited-small {
+    color: black;
+}
