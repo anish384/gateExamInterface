@@ -61,7 +61,7 @@
                     </div>
                     <div class="calc-icon-con">
                         <div class="right-arrow-sprite"></div>
-                        <a href="#" class="calc-tooltip-trigger" data-tooltip="Calculator">
+                        <a href="javascript:void(0)" class="calc-tooltip-trigger" data-tooltip="Calculator" onclick="toggleCalculator()">
                             <div class="calc-icon"></div>
                         </a>
                     </div>
@@ -231,7 +231,77 @@
     
     <div class="version-bar">Version : 17.07.00</div>
 
+    <div id="calculator-modal" class="calc-modal">
+        <div class="calc-header" id="calc-header">
+            <span class="calc-title">Scientific Calculator</span>
+            <div class="calc-controls">
+                <button class="calc-btn">Help</button>
+                <button class="calc-btn window-btn" onclick="toggleCalculator()">_</button>
+                <button class="calc-btn window-btn" onclick="toggleCalculator()">X</button>
+            </div>
+        </div>
+        <div class="calc-body">
+            <iframe src="./Calculator/Calculator.html" frameborder="0" width="100%" height="100%"></iframe>
+        </div>
+    </div>
+
     <script>
+        // --- ADDED: Calculator Toggle & Drag Logic ---
+        function toggleCalculator() {
+            const calcModal = document.getElementById('calculator-modal');
+            if (calcModal.style.display === 'none' || calcModal.style.display === '') {
+                calcModal.style.display = 'block';
+            } else {
+                calcModal.style.display = 'none';
+            }
+        }
+
+        // Make the modal draggable
+        dragElement(document.getElementById("calculator-modal"));
+
+        function dragElement(elmnt) {
+            var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            if (document.getElementById("calc-header")) {
+                // if present, the header is where you move the DIV from:
+                document.getElementById("calc-header").onmousedown = dragMouseDown;
+            } else {
+                // otherwise, move the DIV from anywhere inside the DIV:
+                elmnt.onmousedown = dragMouseDown;
+            }
+
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // get the mouse cursor position at startup:
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                // call a function whenever the cursor moves:
+                document.onmousemove = elementDrag;
+            }
+
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // calculate the new cursor position:
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                // set the element's new position:
+                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+            }
+
+            function closeDragElement() {
+                // stop moving when mouse button is released:
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+        // ----------------------------------------------
+
+
         function toggleSidebar() {
             const rightPanel = document.getElementById('right-panel');
             const toggleArrow = document.getElementById('toggle-arrow');
